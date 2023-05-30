@@ -1,0 +1,161 @@
+*,
+::before,
+::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+
+}
+body {
+    margin: 0;
+    background-color: #0f172a;
+    color: #f8fafc;
+    height: 100vh;
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    
+    
+}
+
+.container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.input-container {
+    width: 70%;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+
+    
+}
+    
+#list {
+    padding: 0rem;
+    margin: 0 ;
+    background-color: #1d4ed8;
+    width: 100%;
+    border-radius: 1rem ;
+    max-height: 15rem;
+    overflow: auto;
+    
+    
+    
+    
+
+}
+.edit-agenda {   
+    width: 35%;
+    background-color: #1d4ed8;
+    color: white;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+#phone-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+    color: #1e293b;
+}
+#name-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+    color: #1e293b;
+}
+#form-btn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    background-color: #60a5fa;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.wrong {
+    border: 2px solid red;
+}
+
+input {
+    outline: none;
+    
+}
+
+.correct {
+    border: 2px solid green;
+    
+}
+
+
+
+.info-text {
+    display: none;
+}
+
+.delete-icon {
+    width: 15%;
+    height: 3rem;
+}
+
+.edit-icon {
+    width: 15%;
+    height: 3rem;
+    background-color: #1d4ed8;
+    color: white;
+}
+
+li {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0.5rem;
+}
+
+
+@media (min-width: 768px) {
+    .input-container {
+        width: 50%;
+        
+    }
+  
+    #list {
+        width: 70%;
+    }
+    .edit-icon {
+        width: 3rem;
+    }
+
+
+}
+
+
+@media (min-width: 1024px) {
+    .input-container {
+        width: 30%;
+    }
+    #list {
+        width: 50%;
+    
+    }
+
+}

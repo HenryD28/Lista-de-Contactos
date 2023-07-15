@@ -4,6 +4,7 @@ const formBtn = document.querySelector('#form-btn');
 const form = document.querySelector('#form');
 const list = document.querySelector('#list');
 
+
 const NAME_REGEX = /^[A-ZÑ][a-zñ]{3,10} [A-ZÑ][a-zñ]{3,10}$/
 const PHONE_REGEX = /^[0](412|414|416|426|424|212)[0-9]{7}$/;
 
@@ -42,10 +43,20 @@ phoneInput.addEventListener('input', e => {
 
 
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
     e.preventDefault();
+    const responseJSON = await fetch('http://localhost:3000/contactos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name: nameInput.value, phone:phoneInput.value})
+    });
+
+    const response = await responseJSON.json();
     const li = document.createElement('li');
     li.innerHTML = `
+    <li>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-icon">
     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
@@ -55,7 +66,7 @@ form.addEventListener('submit', e => {
     <button type="button" class="edit-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="edit-svg">
     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
     </svg></button>
-
+    </li>
     `;
 
     list.append(li);
@@ -67,20 +78,58 @@ form.addEventListener('submit', e => {
     nameValidation = false;
     phoneValidation = false;
     formBtn.disabled = true;
-    
-    localStorage.setItem('listaContactos', list.innerHTML);
 });
 
-list.addEventListener('click', e => {
+const getContactos = async () => {
+    const response =  await fetch('http://localhost:3000/contactos', {method: 'GET'});
+    const contacto = await response.json();
+    contacto.forEach(element => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+        <li id="${element.id}">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="delete-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      
+        <input class='edit-agenda' type="text" value="${element.name}" readonly>
+        <input class='edit-agenda' type="text" value="${element.phone}" readonly>
+        <button type="button" class="edit-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="edit-svg">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+        </svg></button>
+        </li>
+        `
+        list.append(li);
+    });
+    };
+
+getContactos();
+
+
+list.addEventListener('click', async e => {
+    
     if (e.target.closest('.delete-icon')) {
+        const id = e.target.closest('.delete-icon').parentElement.id;
+        await fetch(`http://localhost:3000/contactos/${id}`, {method: 'DELETE'});
         e.target.closest('.delete-icon').parentElement.remove();
-        localStorage.setItem('listaContactos', list.innerHTML);
+
     }
 
     if (e.target.closest('.edit-icon')) {
         const editIcon = e.target.closest('.edit-icon');
         const editInput = editIcon.parentElement.children[2];
         const editInputName = editIcon.parentElement.children[1];
+        const id = e.target.closest('.edit-icon').parentElement.id;
+        const body = JSON.stringify({name: editInputName.value, phone:editInput.value})
+        await fetch(`http://localhost:3000/contactos/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body : body,
+        });
+        console.log(nameInput);
+        console.log(phoneInput);
+    
         editInput.addEventListener('input', e => {
             editValidation = PHONE_REGEX.test(editInput.value);
             validateInput(editInput, editValidation);
@@ -131,7 +180,7 @@ list.addEventListener('click', e => {
 });
 
 
-(() => {
-    const localList = localStorage.getItem('listaContactos');
-    list.innerHTML = localList;
-})()
+//(() => {
+  // const localList = localStorage.getItem('listaContactos');
+   // list.innerHTML = localList;
+//})()
